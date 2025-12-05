@@ -44,14 +44,9 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
         if: matrix.os == 'windows-latest'
-      - name: Install winget
-        uses: Cyberboss/install-winget@v1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: matrix.os == 'windows-latest'
-      - name: Install VapourSynth
-        run: winget install vapoursynth --disable-interactivity --accept-source-agreements --accept-package-agreements
-        if: matrix.os == 'windows-latest'
+      # - name: Install VapourSynth
+      #   run: winget install vapoursynth --disable-interactivity --accept-source-agreements --accept-package-agreements
+      #   if: matrix.os == 'windows-latest'
       - name: Build VapourSynth in debug mode
         run: ${{ steps.build-scripts.outputs.BUILD_SCRIPT }}
       - name: Install cargo-nextest
@@ -120,8 +115,7 @@ jobs:
       - name: Build
         run: cargo build --all-features --workspace
       - name: Address Sanitizer
-        run:
-          cargo +nightly nextest run -Z build-std --target=x86_64-unknown-linux-gnu --all-features
+        run: cargo +nightly nextest run -Z build-std --target=x86_64-unknown-linux-gnu --all-features
           -p vapoursynth4-sys -p vapoursynth4-rs
         env:
           RUSTFLAGS: "-Z sanitizer=address"
